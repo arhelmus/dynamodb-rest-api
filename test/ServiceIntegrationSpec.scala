@@ -2,9 +2,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.{HtmlUnitFactory, OneBrowserPerTest, OneServerPerTest, PlaySpec}
 import play.api.test.Helpers._
 
-/**
-  * Testing is our application can launch up to be sure that DI configured fine.
-  */
 class ServiceIntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory with ScalaFutures {
 
   "Service" should {

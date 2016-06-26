@@ -1,12 +1,9 @@
 package utils
 
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
-import com.github.dwhjames.awswrap.dynamodb.{AmazonDynamoDBScalaClient, AmazonDynamoDBScalaMapper}
+import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Await
-import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.duration._
 
 trait DynamoDbSpec {
