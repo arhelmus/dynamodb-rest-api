@@ -24,3 +24,5 @@ logs
 /.project
 /.settings
 /RUNNING_PID
+
+dynamodb-local

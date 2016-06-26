@@ -6,12 +6,12 @@ case object DESC extends SortingDirection
 
 object SortingDirection {
 
-  def isSortedBy[Obj, F](data: Iterable[Obj], sortedBy: Obj => F, direction: SortingDirection): Boolean = {
+  def isSortedBy[Obj, F](data: Seq[Obj], sortedBy: Obj => F, direction: SortingDirection): Boolean = {
 
     def isCorrectOrder(firstField: F, secondField: F): Boolean =
       direction match {
-        case ASC => firstField.toString >= secondField.toString
-        case DESC => secondField.toString <= firstField.toString
+        case ASC => firstField.toString <= secondField.toString
+        case DESC => firstField.toString >= secondField.toString
       }
 
     data.foldLeft(true -> data.head) {
@@ -20,5 +20,11 @@ object SortingDirection {
     }._1
 
   }
+
+  def sortBy[Obj, F](data: Seq[Obj], sortedBy: Obj => F, direction: SortingDirection): Seq[Obj] =
+    direction match {
+      case ASC => data.sortWith((c1, c2) => sortedBy(c1).toString < sortedBy(c2).toString)
+      case DESC => data.sortWith((c1, c2) => sortedBy(c1).toString > sortedBy(c2).toString)
+    }
 
 }

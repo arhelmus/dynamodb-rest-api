@@ -1,16 +1,22 @@
 import java.time.LocalDate
 import java.util.UUID
 
+import models.tables.CarTable
 import models.{Car, Diesel}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}
-import services.{CarStorageService, InMemoryCarStorageService}
-import utils.{ASC, DESC, SortingDirection}
+import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService}
+import utils.{ASC, DESC, DynamoDbSpec, SortingDirection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class InMemoryCarStorageServiceTest extends CarStorageServiceSpec {
   override val carStorageService: CarStorageService = new InMemoryCarStorageService
+}
+
+class DynamoDbCarStorageTest extends CarStorageServiceSpec with DynamoDbSpec {
+  awaitProvisionTable(CarTable.createTableRequest)
+  override val carStorageService: CarStorageService = new DynamoDbCarStorageService(db)
 }
 
 abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFutures {
@@ -32,7 +38,7 @@ abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFu
     }
 
     "return None if car not exists when get it by id" in new Context {
-      whenReady(carStorageService.getCar(""))(_ should be(None))
+      whenReady(carStorageService.getCar("anyUUID"))(_ should be(None))
     }
 
     "update car by id" in new Context {
@@ -70,7 +76,7 @@ abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFu
 
       whenReady(result) { case (sortedByIdAsc, sortedByIdDesc) =>
         SortingDirection.isSortedBy[Car, String](sortedByIdAsc, _.id, ASC) should be(true)
-        SortingDirection.isSortedBy[Car, String](sortedByIdAsc, _.id, DESC) should be(true)
+        SortingDirection.isSortedBy[Car, String](sortedByIdDesc, _.id, DESC) should be(true)
       }
     }
 
