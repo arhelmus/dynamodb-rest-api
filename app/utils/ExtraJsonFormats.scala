@@ -1,7 +1,8 @@
 package utils
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.time.{Instant, LocalDate, ZoneId}
+import java.util.Date
 
 import com.wix.accord.Violation
 import models.Fuel
@@ -11,12 +12,12 @@ trait ExtraJsonFormats {
 
   implicit val dateWrites = new Writes[LocalDate] {
     override def writes(c: LocalDate) =
-      JsString(c.format(DateTimeFormatter.BASIC_ISO_DATE))
+      JsString(iso8601Formatter.format(c))
   }
 
   implicit val dateReads = new Reads[LocalDate] {
     override def reads(json: JsValue): JsResult[LocalDate] =
-      JsSuccess(LocalDate.from(DateTimeFormatter.BASIC_ISO_DATE.parse(json.as[String])))
+      JsSuccess(toLocalDate(iso8601Formatter.parse(json.as[String])))
   }
 
   implicit val fuelWrites = new Writes[Fuel] {
@@ -35,5 +36,9 @@ trait ExtraJsonFormats {
       "error" -> JsString(o.constraint)
     ))
   }
+
+  private val iso8601Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ")
+  private def toLocalDate(date: Date) =
+    Instant.ofEpochMilli(date.getTime).atZone(ZoneId.systemDefault()).toLocalDate
 
 }
