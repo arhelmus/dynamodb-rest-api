@@ -1,5 +1,6 @@
 DynamoDB RESTful API
 =========================
+[![Build Status](https://travis-ci.org/ArchDev/dynamodb-rest-api.svg?branch=master)](https://travis-ci.org/ArchDev/dynamodb-rest-api)
 
 Its an example of RESTful API builded on top of Play Framework and DynamoDB.
 
