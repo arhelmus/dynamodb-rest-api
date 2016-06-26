@@ -28,31 +28,33 @@ class CarRestController @Inject()(carStorageService: CarStorageService) extends 
     }
   }
 
-  def addCar() = Action.async(parse.json) { r =>
-    val carRequest = r.body.as[Car]
-    withCar(carRequest.id)(
-      ifExists = _ =>
-        Future.successful(Conflict),
-      ifNone =
-        carStorageService.addCar(carRequest)
-          .map(r => Created(Json.toJson(r)))
-          .recover(defaultRecoverFunction)
-    )
+  def addCar() = Action.async(parse.json) { implicit r =>
+    parseCarFromRequest { carRequest =>
+      withCar(carRequest.id)(
+        ifExists = _ =>
+          Future.successful(Conflict),
+        ifNone =
+          carStorageService.addCar(carRequest)
+            .map(r => Created(Json.toJson(r)))
+            .recover(defaultRecoverFunction)
+      )
+    }
   }
 
-  def updateCar(id: CarId) = Action.async(parse.json) { r =>
-    val carRequest = r.body.as[Car]
-    withCar(id)(
-      ifNone =
-        Future.successful(NotFound),
-      ifExists = _ =>
-        carStorageService.updateCar(id, carRequest)
-          .map(r => Ok(Json.toJson(r)))
-          .recover(defaultRecoverFunction)
-    )
+  def updateCar(id: CarId) = Action.async(parse.json) { implicit r =>
+    parseCarFromRequest { carRequest =>
+      withCar(id)(
+        ifNone =
+          Future.successful(NotFound),
+        ifExists = _ =>
+          carStorageService.updateCar(id, carRequest)
+            .map(r => Ok(Json.toJson(r)))
+            .recover(defaultRecoverFunction)
+      )
+    }
   }
 
-  def deleteCar(id: CarId) = Action.async(parse.json) { r =>
+  def deleteCar(id: CarId) = Action.async {
     withCar(id)(
       ifNone =
         Future.successful(NotFound),
@@ -67,6 +69,12 @@ class CarRestController @Inject()(carStorageService: CarStorageService) extends 
     carStorageService.getCar(carId).flatMap {
       case Some(c) => ifExists(c)
       case None => ifNone
+    }
+
+  private def parseCarFromRequest(action: Car => Future[Result])(implicit request: Request[JsValue]) =
+    request.body.asOpt[Car] match {
+      case Some(car) => action(car)
+      case None => Future.successful(BadRequest)
     }
 
   private def defaultRecoverFunction: PartialFunction[Throwable, Result] = {

@@ -4,7 +4,7 @@ import play.api.mvc.AnyContentAsJson
 import play.api.test.Helpers._
 import play.api.test._
 
-class CarRestControllerSpec extends PlaySpec with OneAppPerTest {
+class CarRestControllerSpec extends PlaySpec with OneAppPerSuite {
 
   "Car rest controller" should {
 
@@ -54,6 +54,13 @@ class CarRestControllerSpec extends PlaySpec with OneAppPerTest {
       status(response) mustBe CONFLICT
     }
 
+    "show 400 if json is incorrect on POST request" in new Context {
+      val newCar = carJsObject("id")
+      val response = doRequest(FakeRequest(POST, basePath).withJsonBody(JsObject(Nil)))
+
+      status(response) mustBe BAD_REQUEST
+    }
+
     "update car with specified id by PUT request" in new Context {
       val updatedCar = carJsObject("id", "updated car")
       val response = doRequest(FakeRequest(PUT, basePath + "/id").withJsonBody(updatedCar))
@@ -68,6 +75,13 @@ class CarRestControllerSpec extends PlaySpec with OneAppPerTest {
       val response = doRequest(FakeRequest(PUT, basePath + "/notFound").withJsonBody(updatedCar))
 
       status(response) mustBe NOT_FOUND
+    }
+
+    "show 400 if json is incorrect on PUT request" in new Context {
+      val newCar = carJsObject("id")
+      val response = doRequest(FakeRequest(PUT, basePath + "/id").withJsonBody(JsObject(Nil)))
+
+      status(response) mustBe BAD_REQUEST
     }
 
     "delete car with specified id by DELETE request" in new Context {
