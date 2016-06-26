@@ -1,7 +1,6 @@
 package utils
 
-import com.amazonaws.auth.{AnonymousAWSCredentials, BasicAWSCredentials}
-import com.amazonaws.regions.{InMemoryRegionImpl, Region}
+import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
 import com.github.dwhjames.awswrap.dynamodb.{AmazonDynamoDBScalaClient, AmazonDynamoDBScalaMapper}

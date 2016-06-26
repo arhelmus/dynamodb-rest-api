@@ -1,11 +1,10 @@
 package services
 
-import com.amazonaws.services.dynamodbv2.model.{GetItemRequest, ScanRequest}
 import com.github.dwhjames.awswrap.dynamodb._
 import models.Car
 import models.Car.CarId
 import models.tables.CarTable
-import utils.{ASC, DESC, SortingDirection}
+import utils.SortingDirection
 
 import scala.concurrent.{ExecutionContext, Future}
 
