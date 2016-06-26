@@ -1,13 +1,16 @@
 package services
 
+import javax.inject._
+
 import com.github.dwhjames.awswrap.dynamodb._
+import com.wix.accord._
 import models.Car
 import models.Car.CarId
 import models.tables.CarTable
-import utils.{SortingDirection, ValidationException}
-import com.wix.accord._
+import play.api.libs.concurrent.Execution.Implicits._
+import utils.{DynamoDbConnection, SortingDirection, ValidationException}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 trait CarStorageService {
 
@@ -23,7 +26,9 @@ trait CarStorageService {
 
 }
 
-class DynamoDbCarStorageService(db: AmazonDynamoDBScalaMapper)(implicit executionContext: ExecutionContext) extends CarStorageService {
+class DynamoDbCarStorageService @Inject() (dbConnection: DynamoDbConnection) extends CarStorageService {
+
+  import dbConnection._
 
   private implicit val dbSerializer = CarTable.dynamoDbSerializer
 

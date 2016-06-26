@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
 resolvers += Resolver.bintrayRepo("dwhjames", "maven")
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
+javaOptions in Test += "-Dconfig.file=conf/application.test.conf"
 startDynamoDBLocal <<= startDynamoDBLocal.dependsOn(compile in Test)
 test in Test <<= (test in Test).dependsOn(startDynamoDBLocal)
 testOptions in Test <+= dynamoDBLocalTestCleanup

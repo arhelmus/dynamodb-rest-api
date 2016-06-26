@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService}
 import utils._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits._
 
 class InMemoryCarStorageServiceTest extends CarStorageServiceSpec {
   override val carStorageService: CarStorageService = new InMemoryCarStorageService
@@ -16,7 +16,7 @@ class InMemoryCarStorageServiceTest extends CarStorageServiceSpec {
 
 class DynamoDbCarStorageTest extends CarStorageServiceSpec with DynamoDbSpec {
   awaitProvisionTable(CarTable.createTableRequest)
-  override val carStorageService: CarStorageService = new DynamoDbCarStorageService(db)
+  override val carStorageService: CarStorageService = new DynamoDbCarStorageService(connection)
 }
 
 abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFutures {

@@ -6,14 +6,14 @@ import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
 import com.github.dwhjames.awswrap.dynamodb.{AmazonDynamoDBScalaClient, AmazonDynamoDBScalaMapper}
 
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.duration._
 
 trait DynamoDbSpec {
-  private val sdkClient = new AmazonDynamoDBAsyncClient(new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY"))
-  sdkClient.setEndpoint("http://localhost:8000")
-  private val client = new AmazonDynamoDBScalaClient(sdkClient)
-  val db = AmazonDynamoDBScalaMapper(client)
+
+  val connection = new InMemoryDynamoDbConnection
+
+  import connection._
 
   def provisionTable(createTableRequest: CreateTableRequest) =
     db.client.listTables().flatMap {
