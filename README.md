@@ -1,16 +1,17 @@
-# DynamoDB RESTful API
+DynamoDB RESTful API
+=========================
 
 Its an example of RESTful API builded on top of Play Framework and DynamoDB.
-That service fully checked by unit tests. There are only 2 IT tests that checks is service launched up and is they answer on preflight CORS requests.
-Used async DynamoDB driver and in memory database instance for testing, so service can be easily built on CI.
+
+That service fully checked by unit tests. There are only 2 IT tests that checks is service launched up and is they answer on preflight CORS requests. Used async DynamoDB driver and in memory database instance for testing, so service can be easily built on CI.
 
 ## URL mappings
-* GET /api/health/isAlive - health check url for load balancer
-* GET /api/cars?sortField=id&sortDirection=ASC - get sorted list of all cars (sort parameters optional)
-* POST /api/cars - create new car from JSON body of request
-* GET /api/cars/:id - get car by ID
-* PUT /api/cars/:id - update car by ID from JSON body of request
-* DELETE /api/cars/:id - remove car by ID
+* **GET /api/health/isAlive** - health check url for load balancer
+* **GET /api/cars?sortField=id&sortDirection=ASC** - get sorted list of all cars (sort parameters optional)
+* **POST /api/cars** - create new car from JSON body of request
+* **GET /api/cars/:id** - get car by ID
+* **PUT /api/cars/:id** - update car by ID from JSON body of request
+* **DELETE /api/cars/:id** - remove car by ID
 
 ## Car model
 * **id** (_required_): **string**;
@@ -19,4 +20,20 @@ Used async DynamoDB driver and in memory database instance for testing, so servi
 * **price** (_required_): **integer**;
 * **new** (_required_): **boolean**, indicates if car is new or used;
 * **mileage** (_only for used cars_): **integer**;
-* **first registration** (_only for used cars_): **date** default date javascript string.
+* **first registration** (_only for used cars_): **date** default javascript date string.
+
+## Run application
+To run application, call:
+```
+activator run
+```
+
+## Run tests
+To run test, call:
+```
+activator test
+```
+
+## Copyright  
+Copyright (C) 2015 Arthur Kushka.  
+Distributed under the MIT License.
