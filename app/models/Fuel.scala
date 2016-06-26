@@ -10,7 +10,12 @@ case object Gasoline extends Fuel {
   override def toString() = "gasoline"
 }
 
-object Fuel extends FuelSerializer
+object Fuel extends FuelSerializer {
+  def apply(fuelName: String) = fuelName match {
+    case "diesel" => Diesel
+    case "gasoline" => Gasoline
+  }
+}
 
 trait FuelSerializer {
 

@@ -1,1 +1,7 @@
-GET /api/health/isAlive controllers.HealthCheckController.isAlive()
+GET           /api/health/isAlive        controllers.HealthCheckController.isAlive()
+
+GET           /api/cars                  controllers.CarRestController.getAllCars(sortField: String ?= "id", sortDirection: String ?= "ASC")
+POST          /api/cars                  controllers.CarRestController.addCar()
+GET           /api/cars/:id              controllers.CarRestController.getCarById(id)
+PUT           /api/cars/:id              controllers.CarRestController.updateCar(id)
+DELETE        /api/cars/:id              controllers.CarRestController.deleteCar(id)

@@ -10,11 +10,11 @@ import utils._
 
 import play.api.libs.concurrent.Execution.Implicits._
 
-class InMemoryCarStorageServiceTest extends CarStorageServiceSpec {
+class InMemoryCarStorageServiceSpec extends CarStorageServiceSpec {
   override val carStorageService: CarStorageService = new InMemoryCarStorageService
 }
 
-class DynamoDbCarStorageTest extends CarStorageServiceSpec with DynamoDbSpec {
+class DynamoDbCarStorageSpec extends CarStorageServiceSpec with DynamoDbSpec {
   awaitProvisionTable(CarTable.createTableRequest)
   override val carStorageService: CarStorageService = new DynamoDbCarStorageService(connection)
 }
@@ -90,7 +90,7 @@ abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFu
 
     trait Context {
       val carId = UUID.randomUUID().toString
-      val testCar = Car(carId, "Test car", Diesel, 123, 100000, LocalDate.now())
+      val testCar = Car.oldCar(carId, "Test car", Diesel, 123, 100000, LocalDate.now())
       val invalidCar = testCar.copy(`new` = true)
     }
 

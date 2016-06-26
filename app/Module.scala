@@ -1,14 +1,16 @@
 import com.google.inject.AbstractModule
-import play.api.{Configuration, Environment}
-import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService}
+import play.api.{Configuration, Environment, Mode}
+import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService, StaticCarStorageService}
 
 class Module(environment: Environment, configuration: Configuration) extends AbstractModule {
 
   override def configure() = {
-    configuration.getBoolean("db.inMemory").getOrElse(false) match {
-      case true =>
+    environment.mode match {
+      case Mode.Test =>
+        bind(classOf[CarStorageService]).to(classOf[StaticCarStorageService])
+      case Mode.Dev =>
         bind(classOf[CarStorageService]).to(classOf[InMemoryCarStorageService])
-      case false =>
+      case Mode.Prod =>
         bind(classOf[CarStorageService]).to(classOf[DynamoDbCarStorageService])
     }
   }

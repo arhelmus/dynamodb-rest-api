@@ -35,7 +35,7 @@ class CarValidationSpec extends WordSpec with Matchers {
   }
 
   trait Context {
-    val validCar = Car("carId", "Test car", Diesel, 123, 100000, LocalDate.now())
+    val validCar = Car.oldCar("carId", "Test car", Diesel, 123, 100000, LocalDate.now())
 
     def shouldBeValid(car: Car) =
       validate(car).isSuccess should be(true)

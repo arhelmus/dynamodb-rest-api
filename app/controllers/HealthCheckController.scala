@@ -1,6 +1,5 @@
 package controllers
 
-import com.google.inject.Singleton
 import play.api.mvc.{Action, Controller}
 
 class HealthCheckController extends Controller {

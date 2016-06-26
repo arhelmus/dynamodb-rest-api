@@ -6,6 +6,13 @@ case object DESC extends SortingDirection
 
 object SortingDirection {
 
+  def parse(sortDirection: String) =
+    sortDirection.toUpperCase() match {
+      case "ASC" => Some(ASC)
+      case "DESC" => Some(DESC)
+      case _ => None
+    }
+
   def isSortedBy[Obj, F](data: Seq[Obj], sortedBy: Obj => F, direction: SortingDirection): Boolean = {
 
     def isCorrectOrder(firstField: F, secondField: F): Boolean =

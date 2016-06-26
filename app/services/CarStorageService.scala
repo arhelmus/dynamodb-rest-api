@@ -26,6 +26,9 @@ trait CarStorageService {
 
 }
 
+/**
+  * Production implementation.
+  */
 class DynamoDbCarStorageService @Inject() (dbConnection: DynamoDbConnection) extends CarStorageService {
 
   import dbConnection._
@@ -62,6 +65,9 @@ class DynamoDbCarStorageService @Inject() (dbConnection: DynamoDbConnection) ext
 
 }
 
+/**
+  * Should be used in high order services unit tests.
+  */
 class InMemoryCarStorageService extends CarStorageService {
 
   override def getAllCars[F](sortBy: Car => F, direction: SortingDirection): Future[Seq[Car]] =
@@ -99,5 +105,30 @@ class InMemoryCarStorageService extends CarStorageService {
     }
 
   private var innerState: Map[CarId, Car] = Map()
+
+}
+
+/**
+  * Should be used in application tests.
+  */
+class StaticCarStorageService extends CarStorageService {
+
+  override def getAllCars[F](sortBy: (Car) => F, direction: SortingDirection): Future[Seq[Car]] =
+    Future.successful(SortingDirection.sortBy(Seq(Car.testCar("test"), Car.testCar("test2")), sortBy, direction))
+
+  override def addCar(car: Car): Future[Car] =
+    Future.successful(car)
+
+  override def updateCar(id: CarId, car: Car): Future[Car] =
+    Future.successful(car.copy(id = id))
+
+  override def getCar(id: CarId): Future[Option[Car]] =
+    id match {
+      case "notFound" => Future.successful(None)
+      case _ => Future.successful(Some(Car.testCar(id)))
+    }
+
+  override def deleteCar(id: CarId): Future[Unit] =
+    Future.successful(Unit)
 
 }

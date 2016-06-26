@@ -25,6 +25,16 @@ class SortingOptionsSpec extends WordSpec with Matchers {
       isSortedBy[Int, Int](Seq(3, 2, 1), v => v, DESC) should be(true)
     }
 
+    "parse direction literal" in {
+      parse("asc") should be(Some(ASC))
+      parse("aSc") should be(Some(ASC))
+      parse("ASC") should be(Some(ASC))
+      parse("desc") should be(Some(DESC))
+      parse("dESc") should be(Some(DESC))
+      parse("DESC") should be(Some(DESC))
+      parse("...") should be(None)
+    }
+
   }
 
 }
