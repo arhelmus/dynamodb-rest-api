@@ -6,7 +6,7 @@ import models.{Car, Diesel}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}
 import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService}
-import utils.{ASC, DESC, DynamoDbSpec, SortingDirection}
+import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -80,9 +80,18 @@ abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFu
       }
     }
 
+    "return validation failure on adding of invalid car" in new Context {
+      whenReady(carStorageService.addCar(invalidCar).failed)(_ shouldBe a [ValidationException])
+    }
+
+    "return validation failure on update with invalid car" in new Context {
+      whenReady(carStorageService.updateCar("any", invalidCar).failed)(_ shouldBe a [ValidationException])
+    }
+
     trait Context {
       val carId = UUID.randomUUID().toString
       val testCar = Car(carId, "Test car", Diesel, 123, 100000, LocalDate.now())
+      val invalidCar = testCar.copy(`new` = true)
     }
 
   }
