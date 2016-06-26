@@ -9,6 +9,7 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   cache,
   ws,
+  filters,
   "com.wix" %% "accord-core" % "0.5",
   "com.amazonaws" % "aws-java-sdk" % "1.11.10",
   "com.github.dwhjames" %% "aws-wrap" % "0.8.0",
