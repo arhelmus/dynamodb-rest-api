@@ -4,10 +4,10 @@ import java.util.UUID
 import models.tables.CarTable
 import models.{Car, Diesel}
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{Matchers, WordSpec}
 import services.{CarStorageService, DynamoDbCarStorageService, InMemoryCarStorageService}
 import utils._
-
 import play.api.libs.concurrent.Execution.Implicits._
 
 class InMemoryCarStorageServiceSpec extends CarStorageServiceSpec {
@@ -22,6 +22,9 @@ class DynamoDbCarStorageSpec extends CarStorageServiceSpec with DynamoDbSpec {
 abstract class CarStorageServiceSpec extends WordSpec with Matchers with ScalaFutures {
 
   val carStorageService: CarStorageService
+
+  implicit val defaultPatience =
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   "Car storage service" should {
 
